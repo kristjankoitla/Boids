@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "sourceMap": true,
+    "lib": [
+        "es5",
+        "dom"
+    ],
+    "noUnusedLocals": true,
+    "module": "es2015",
+    "outDir": "./src/compiled"
+  }
+}
