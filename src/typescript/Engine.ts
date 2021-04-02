@@ -11,7 +11,7 @@ export class Engine {
 
     public constructor() {
         this.entities = new Array();
-        this.entities.push(new Entity(10, 10, 10, 10));
+        this.entities.push(new Entity(200, 200, 4, 3, 190));
         this.logic = new Logic(this.entities);
         this.canvas = new Canvas(this.entities);
     }
