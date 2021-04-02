@@ -11,7 +11,11 @@ export class Engine {
 
     public constructor() {
         this.entities = new Array();
-        this.entities.push(new Entity(200, 200, 4, 3, 190));
+        // for (let i = 0; i < 10; i++) {
+        //     this.entities.push(new Entity(Math.random() * 490, Math.random() * 490, 4, 2, Math.random() * 360));   
+        // }
+        this.entities.push(new Entity(210, 300, 4, 1, 270));
+        this.entities.push(new Entity(200, 310, 4, 1, 250));
         this.logic = new Logic(this.entities);
         this.canvas = new Canvas(this.entities);
     }
@@ -27,7 +31,7 @@ export class Engine {
             return function() {
                 self.gameLoop();
             }
-        })(this), 1000/this.TARGET_FPS);
+        })(this), 1000 / this.TARGET_FPS);
     }
     
     private gameLoop(): void {
@@ -35,11 +39,10 @@ export class Engine {
         // handle input here gameLogic.input()
 
         // update game logic gameLogic.update()
-        this.logic.update();
+        this.logic.update(this.entities);
 
         // render here canvas.render()
         this.canvas.render();
-
     
     }
 

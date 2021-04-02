@@ -8,10 +8,14 @@ export class Logic {
         this.entities = entities;
     }
 
-    public update(): void {
+    public update(entities: Array<Entity>): void {
         for (let i = 0; i < this.entities.length; i++) {
             const entity = this.entities[i];
-            entity.update();
+            entity.update(entities);
+        }
+        for (let i = 0; i < this.entities.length; i++) {
+            const entity = this.entities[i];
+            entity.move();
         }
     }
 
