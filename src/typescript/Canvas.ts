@@ -1,5 +1,4 @@
-// import {Entity} from "./Entity.js";
-import {Boid} from "./Boid.js";
+import {Entity} from "./Entity.js";
 
 export class Canvas {
 
@@ -7,9 +6,9 @@ export class Canvas {
     private ctx: CanvasRenderingContext2D;
     private width: number;
     private height: number;
-    private entities: Array<Boid>;
+    private entities: Array<Entity>;
 
-    public constructor(entities: Array<Boid>) {
+    public constructor(entities: Array<Entity>) {
         this.entities = entities;
     }
 

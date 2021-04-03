@@ -10,6 +10,10 @@ export class Entity {
         this.size = size;
     }
 
+    public update(entities: Array<Entity>) {
+
+    }
+
     public render(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = "#558cf4";
         ctx.fillRect(this.xPos, this.yPos, this.size, this.size);
