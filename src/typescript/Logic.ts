@@ -1,14 +1,15 @@
-import {Entity} from "./Entity.js";
+// import {Entity} from "./Entity.js";
+import {Boid} from "./Boid.js";
 
 export class Logic {
 
-    private entities: Array<Entity>;
+    private entities: Array<Boid>;
 
-    public constructor(entities: Array<Entity>) {
+    public constructor(entities: Array<Boid>) {
         this.entities = entities;
     }
 
-    public update(entities: Array<Entity>): void {
+    public update(entities: Array<Boid>): void {
         for (let i = 0; i < this.entities.length; i++) {
             const entity = this.entities[i];
             entity.update(entities);
