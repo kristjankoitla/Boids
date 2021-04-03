@@ -27,6 +27,7 @@ export class Boid extends Entity {
         if (nearbyMid[1] - this.yPos > 0) {
             angle += 180;
         }
+        angle = 360 - angle;
 
         let turnSide = this.findTurnSide(this.direction, angle);
 
