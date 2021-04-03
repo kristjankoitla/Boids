@@ -43,7 +43,6 @@ export class Entity {
             angle += 180;
         }
 
-
         let turnSide = this.findTurnSide(this.direction, angle);
 
         if (nearbyMid[2] >= 1) {
@@ -51,6 +50,11 @@ export class Entity {
         }
         this.direction = this.direction <= 0 ? 360 : this.direction;
 
+        if (this == entities[1]) {
+            return;
+        }
+
+        console.log("average angle: " + this.findAverageAngle(entities));
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
@@ -71,6 +75,18 @@ export class Entity {
 
         ctx.fill();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
+    private findAverageAngle(entities: Array<Entity>): number {
+        let angles = [];
+        for (let i = 0; i < entities.length; i++) {
+            const entity = entities[i];
+            if (this == entity) {
+                continue;
+            }
+            angles.push(entity.direction);
+        }
+        return this.meanAngleDeg(angles);
     }
 
     private findNearby(entities: Array<Entity>): Array<number> {
@@ -110,4 +126,20 @@ export class Entity {
         }
     }
 
+    private degToRad(a: number): number {
+        return Math.PI / 180 * a;
+    }
+
+    private sum(arr: Array<number>): number {
+        let s = 0;
+        for (let i = 0; i < arr.length; i++) s += arr[i];
+        return s;
+    }
+
+    private meanAngleDeg(arr: Array<number>): number {
+        return 180 / Math.PI * Math.atan2(
+            this.sum(arr.map(this.degToRad).map(Math.sin)) / arr.length,
+            this.sum(arr.map(this.degToRad).map(Math.cos)) / arr.length
+        );
+    }
 }

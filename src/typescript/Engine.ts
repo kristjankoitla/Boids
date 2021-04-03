@@ -31,7 +31,7 @@ export class Engine {
             return function() {
                 self.gameLoop();
             }
-        })(this), 1000 / this.TARGET_FPS);
+        })(this), 100000 / this.TARGET_FPS);
     }
     
     private gameLoop(): void {
