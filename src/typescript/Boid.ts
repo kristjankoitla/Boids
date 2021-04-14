@@ -21,33 +21,31 @@ export class Boid extends Entity {
             }
         }
 
-        let nearbyMid = this.findNearby(boids);
-        let angle = Math.atan(((nearbyMid[0] - this.xPos) / (nearbyMid[1] - this.yPos))) * 180 / Math.PI;
-        angle += 90;
-        if (nearbyMid[1] - this.yPos > 0) {
-            angle += 180;
+        let boidsInView = this.findBoidsInView(boids);
+        let middleOfBoidsInView = this.findAveragePoint(boidsInView);
+        
+        let angleToMidOfBoids = Math.atan(((middleOfBoidsInView[0] - this.xPos) / (middleOfBoidsInView[1] - this.yPos))) * 180 / Math.PI;
+        angleToMidOfBoids += 90;
+        if (middleOfBoidsInView[1] - this.yPos > 0) {
+            angleToMidOfBoids += 180;
         }
-        angle = 360 - angle;
+        angleToMidOfBoids = 360 - angleToMidOfBoids;
 
-        let turnSide = this.findTurnSide(this.direction, angle);
-
-        if (nearbyMid[2] >= 1) {
+        if (!isNaN(angleToMidOfBoids)) {
+            let turnSide = this.findTurnSide(this.direction, angleToMidOfBoids)
             this.direction = (this.direction + 1 * turnSide) % 360;
+            this.direction = this.direction <= 0 ? 360 : this.direction;
         }
-        this.direction = this.direction <= 0 ? 360 : this.direction;
 
         let dx = this.speed * Math.cos(this.direction * Math.PI / 180);
         let dy = this.speed * Math.sin(this.direction * Math.PI / 180);
 
         // teleport clamp the boids
-
         this.xPos = (this.xPos + dx) % 490;
         this.yPos = (this.yPos + dy) % 490;
 
         if (this.xPos < 0) this.xPos = 490;
         if (this.yPos < 0) this.yPos = 490;
-
-        // todo the average angle is still not quite right
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
@@ -57,22 +55,8 @@ export class Boid extends Entity {
         this.renderTriangle(ctx, angle);
     }
 
-    // private findAverageAngle(entities: Array<Boid>): number {
-    //     let angles = [];
-    //     for (let i = 0; i < entities.length; i++) {
-    //         const entity = entities[i];
-    //         // don't account for self when finding the average angle
-    //         if (this == entity) {
-    //             continue;
-    //         }
-    //         angles.push(entity.direction);    
-    //     }
-
-    //     return Util.findMeanAngleDeg(angles);
-    // }
-
-    // Finds the average point of all nearby boids.
-    private findNearby(boids: Array<Boid>): Array<number> {
+    // Finds the average point of boids.
+    private findAveragePoint(boids: Array<Boid>): Array<number> {
         let pointX = 0;
         let pointY = 0;
         let count = 0;
@@ -82,14 +66,12 @@ export class Boid extends Entity {
             if (boid == this) {
                 continue;
             }
-            if (Util.distance([boid.xPos, boid.yPos], [this.xPos, this.yPos]) <= 70) {
-                pointX += boid.xPos;
-                pointY += boid.yPos;
-                count += 1;
-            }
+            pointX += boid.xPos;
+            pointY += boid.yPos;
+            count += 1
         }
 
-        return [pointX/count, pointY/count, count];
+        return [pointX/count, pointY/count];
     }
 
     private findTurnSide(current: number, target: number): number {
@@ -102,5 +84,45 @@ export class Boid extends Entity {
         } else {
             return 1;
         }
+    }
+
+    private findBoidsInView(boids: Array<Boid>): Array<Boid> {
+
+        let inView = [];
+
+        for (let i = 0; i < boids.length; i++) {
+            const boid = boids[i];
+
+            if (boid == this) {
+                continue;
+            }
+
+            // if the boid is too far away, skip
+            if (Util.distance([boid.xPos, boid.yPos], [this.xPos, this.yPos]) > 70) {
+                continue;
+            }
+
+            // find the angle of the boid, with 0, 0 being this boid
+            let angle = Math.atan(((boid.yPos - this.yPos) / (boid.xPos - this.xPos))) * 180 / Math.PI;
+            
+            if (boid.xPos - this.xPos < 0) {
+                angle += 180;
+            }
+            if (boid.xPos - this.xPos > 0 && boid.yPos - this.yPos < 0) {
+                angle += 360
+            }
+
+            // their angle relative to this angle
+            let relativeAngle = Math.abs(this.direction - angle);
+
+            // if not in field of view, skip
+            if (relativeAngle < 210 && relativeAngle > 150) {
+                continue
+            }
+
+            inView.push(boid)
+        }
+
+        return inView;
     }
 }
