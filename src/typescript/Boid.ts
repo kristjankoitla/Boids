@@ -33,7 +33,7 @@ export class Boid extends Entity {
 
         if (!isNaN(angleToMidOfBoids)) {
             let turnSide = this.findTurnSide(this.direction, angleToMidOfBoids)
-            this.direction = (this.direction + 1 * turnSide) % 360;
+            this.direction = (this.direction + 3 * turnSide) % 360;
             this.direction = this.direction <= 0 ? 360 : this.direction;
         }
 
@@ -116,7 +116,7 @@ export class Boid extends Entity {
             let relativeAngle = Math.abs(this.direction - angle);
 
             // if not in field of view, skip
-            if (relativeAngle < 210 && relativeAngle > 150) {
+            if (relativeAngle < 225 && relativeAngle > 135) {
                 continue
             }
 

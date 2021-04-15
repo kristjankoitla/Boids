@@ -12,11 +12,9 @@ export class Engine {
 
     public constructor() {
         this.entities = new Array();
-        // for (let i = 0; i < 100; i++) {
-        //     this.entities.push(new Boid(Math.random() * 490, Math.random() * 490, 4, 2, Math.random() * 360));   
-        // }
-        this.entities.push(new Boid(210, 300, 4, 3, 270));
-        this.entities.push(new Boid(200, 310, 4, 3, 250));
+        for (let i = 0; i < 200; i++) {
+            this.entities.push(new Boid(Math.random() * 490, Math.random() * 490, 4, 2, Math.random() * 180));   
+        }
         this.logic = new Logic(this.entities);
         this.canvas = new Canvas(this.entities);
     }
