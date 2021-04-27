@@ -1,7 +1,12 @@
+import { Canvas } from "./Canvas.js";
 import { Entity } from "./Entity.js";
 import {Util} from "./Util.js";
 
 export class Boid extends Entity {
+
+    private readonly FIELD_OF_VIEW_DEGREES = 270;
+    private readonly TURN_SHARPNESS_DEGREES = 4;
+    private readonly FIELD_OF_VIEW_LENGTH = 100;
 
     private speed: number;
     private direction: number;
@@ -12,7 +17,7 @@ export class Boid extends Entity {
         this.direction = direction;
     }
 
-    public update(entities: Array<Entity>): void {
+    public update(entities: Array<Entity>, canvas: Canvas): void {
         let boids: Array<Boid> = [];
         for (let i = 0; i < entities.length; i++) {
             const entity = entities[i];
@@ -33,7 +38,7 @@ export class Boid extends Entity {
 
         if (!isNaN(angleToMidOfBoids)) {
             let turnSide = this.findTurnSide(this.direction, angleToMidOfBoids)
-            this.direction = (this.direction + 3 * turnSide) % 360;
+            this.direction = (this.direction + this.TURN_SHARPNESS_DEGREES * turnSide) % 360;
             this.direction = this.direction <= 0 ? 360 : this.direction;
         }
 
@@ -41,11 +46,11 @@ export class Boid extends Entity {
         let dy = this.speed * Math.sin(this.direction * Math.PI / 180);
 
         // teleport clamp the boids
-        this.xPos = (this.xPos + dx) % 490;
-        this.yPos = (this.yPos + dy) % 490;
+        this.xPos = (this.xPos + dx) % canvas.width;
+        this.yPos = (this.yPos + dy) % canvas.height;
 
-        if (this.xPos < 0) this.xPos = 490;
-        if (this.yPos < 0) this.yPos = 490;
+        if (this.xPos < 0) this.xPos = canvas.width;
+        if (this.yPos < 0) this.yPos = canvas.height;
     }
 
     public render(ctx: CanvasRenderingContext2D): void {
@@ -98,7 +103,7 @@ export class Boid extends Entity {
             }
 
             // if the boid is too far away, skip
-            if (Util.distance([boid.xPos, boid.yPos], [this.xPos, this.yPos]) > 70) {
+            if (Util.distance([boid.xPos, boid.yPos], [this.xPos, this.yPos]) > this.FIELD_OF_VIEW_LENGTH) {
                 continue;
             }
 
@@ -116,7 +121,7 @@ export class Boid extends Entity {
             let relativeAngle = Math.abs(this.direction - angle);
 
             // if not in field of view, skip
-            if (relativeAngle < 225 && relativeAngle > 135) {
+            if (relativeAngle < 360 - this.FIELD_OF_VIEW_DEGREES / 2 && relativeAngle > this.FIELD_OF_VIEW_DEGREES / 2) {
                 continue
             }
 

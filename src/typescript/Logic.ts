@@ -1,3 +1,4 @@
+import { Canvas } from "./Canvas.js";
 import {Entity} from "./Entity.js";
 
 export class Logic {
@@ -8,10 +9,10 @@ export class Logic {
         this.entities = entities;
     }
 
-    public update(entities: Array<Entity>): void {
+    public update(entities: Array<Entity>, canvas: Canvas): void {
         for (let i = 0; i < this.entities.length; i++) {
             const entity = this.entities[i];
-            entity.update(entities);
+            entity.update(entities, canvas);
         }
     }
 

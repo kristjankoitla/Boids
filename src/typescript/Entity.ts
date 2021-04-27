@@ -10,7 +10,7 @@ export class Entity {
         this.size = size;
     }
 
-    public update(entities: Array<Entity>) {
+    public update(entities: Array<Entity>, canvas: any) {
 
     }
 

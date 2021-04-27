@@ -4,8 +4,8 @@ export class Canvas {
 
     private canvas: any;
     private ctx: CanvasRenderingContext2D;
-    private width: number;
-    private height: number;
+    public width: number;
+    public height: number;
     private entities: Array<Entity>;
 
     public constructor(entities: Array<Entity>) {
